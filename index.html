@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group 4 Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="grid-lines"></div>
+        
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <div class="start-content">
+                <div class="logo-container">
+                    <div class="logo">
+                        <span class="logo-text">Q</span>
+                    </div>
+                </div>
+                
+                <div class="start-header">
+                    <h1>
+                      Quiz
+                      <span class="four">4</span>
+                      You
+                    </h1>
+                    <p>Challenge your knowledge with our quizzes!</p>
+                </div>
+                  
+                
+                <div class="start-features">
+                    <div class="feature">
+                        <div class="feature-icon timer-icon"></div>
+                        <div class="feature-text">
+                            <h3>30-Second Timer</h3>
+                            <p>Test your quick thinking</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature">
+                        <div class="feature-icon categories-icon"></div>
+                        <div class="feature-text">
+                            <h3>Multiple Categories</h3>
+                            <p>Find your area of expertise</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature">
+                        <div class="feature-icon score-icon"></div>
+                        <div class="feature-text">
+                            <h3>Track Your Score</h3>
+                            <p>See how you measure up</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="start-footer">
+                    <button id="start-btn" class="btn pulse-animation">Get Started</button>
+                </div>
+                
+                <div class="decorative-elements">
+                    <div class="circle circle-1"></div>
+                    <div class="circle circle-2"></div>
+                    <div class="circle circle-3"></div>
+                    <div class="square square-1"></div>
+                    <div class="square square-2"></div>
+                    <div class="triangle"></div>
+                    <div class="wave wave-1"></div>
+                    <div class="wave wave-2"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Category Selection Screen -->
+        <div id="category-screen" class="screen">
+            <div class="category-content">
+                <div class="back-arrow" id="back-to-start-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </div>
+                
+                <div class="category-header">
+                    <h2>Choose a Category</h2>
+                    <p>Select your preferred quiz topic</p>
+                </div>
+                
+                <div class="categories-grid">
+                    <div class="category-card" data-category="history">
+                        <div class="category-icon history-icon"></div>
+                        <h3>History</h3>
+                        <p>Journey through time with historical facts</p>
+                    </div>
+                    
+                    <div class="category-card" data-category="entertainment">
+                        <div class="category-icon entertainment-icon"></div>
+                        <h3>Entertainment</h3>
+                        <p>Movies, music, and pop culture trivia</p>
+                    </div>
+                    
+                    <div class="category-card" data-category="riddles">
+                        <div class="category-icon riddles-icon"></div>
+                        <h3>Riddles</h3>
+                        <p>Challenge your mind with brain teasers</p>
+                    </div>
+                    
+                    <div class="category-card" data-category="logic">
+                        <div class="category-icon logic-icon"></div>
+                        <h3>Logic Puzzles</h3>
+                        <p>Test your reasoning and problem-solving skills</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Screen -->
+        <div id="question-screen" class="screen">
+            <div class="question-header">
+                <div class="category-badge" id="current-category">Science</div>
+                <div class="question-progress">Question <span id="current-question">1</span>/10</div>
+            </div>
+            
+            <div class="question-wrapper">
+                <div class="timer-circle">
+                    <div class="timer-display">
+                        <span id="timer-text">30</span>
+                        <svg class="timer-ring" width="70" height="70">
+                            <circle class="timer-background" cx="35" cy="35" r="30" stroke-width="5"></circle>
+                            <circle class="timer-progress" cx="35" cy="35" r="30" stroke-width="5" stroke-dasharray="188.5" stroke-dashoffset="0"></circle>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="question-box">
+                    <h2 id="question-text">Write the Question here</h2>
+                    <div class="options-container">
+                        <button class="option-btn" data-index="0"></button>
+                        <button class="option-btn" data-index="1"></button>
+                        <button class="option-btn" data-index="2"></button>
+                        <button class="option-btn" data-index="3"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div id="completion-screen" class="screen">
+            <div class="completion-content">
+                <div class="completion-header">
+                    <div class="confetti"></div>
+                    <h1>Quiz <span class="highlight">Completed!</span></h1>
+                    <p id="completion-message">Great job! You've completed the quiz.</p>
+                </div>
+                
+                <div class="score-display">
+                    <div class="score-circle">
+                        <span id="final-score">0</span>
+                        <span class="score-total">/10</span>
+                    </div>
+                </div>
+                
+                <div class="completion-buttons">
+                    <button id="try-again-btn" class="btn">Try Again</button>
+                    <button id="home-btn" class="btn btn-secondary">Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
