@@ -6,8 +6,115 @@
     <title>Group 4 Quiz</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        // Initialize audio as soon as possible
+        const menuSound = new Audio('Menu.mp3');
+        menuSound.loop = true;
+        menuSound.volume = 0.5;
+        menuSound.autoplay = true;
+        
+        // Try to play automatically
+        menuSound.play().catch(() => {
+            // If autoplay fails, play on first click
+            document.addEventListener('click', () => {
+                menuSound.play();
+            }, { once: true });
+        });
+        
+        // Make audio globally accessible
+        window.menuSound = menuSound;
+    </script>
 </head>
 <body>
+    <!-- Audio elements -->
+    <audio id="quizStartSound" preload="auto">
+        <source src="CKK - Daft Punk - Technologic (Karaoke) (mp3cut.net).mp3" type="audio/mp3">
+    </audio>
+    <audio id="correctSound">
+        <source src="Correct.mp3" type="audio/mp3">
+    </audio>
+    <audio id="wrongSound">
+        <source src="Wrong.mp3" type="audio/mp3">
+    </audio>
+    <audio id="completionSound">
+        <source src="Menu.mp3" type="audio/mp3">
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const quizStartSound = document.getElementById('quizStartSound');
+            const correctSound = document.getElementById('correctSound');
+            const wrongSound = document.getElementById('wrongSound');
+            const completionSound = document.getElementById('completionSound');
+            
+            // Configure sounds
+            quizStartSound.loop = true;
+            quizStartSound.volume = 0.7;
+            correctSound.volume = 0.6;
+            wrongSound.volume = 0.6;
+            completionSound.volume = 0.7;
+
+            // Category selection handling
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    window.menuSound.pause();
+                    window.menuSound.currentTime = 0;
+                    quizStartSound.play().catch(e => console.log('Audio play failed:', e));
+                });
+            });
+
+            // Answer feedback sounds
+            function playAnswerSound(isCorrect) {
+                if (isCorrect) {
+                    correctSound.currentTime = 0;
+                    correctSound.play().catch(e => console.log('Correct sound failed:', e));
+                } else {
+                    wrongSound.currentTime = 0;
+                    wrongSound.play().catch(e => console.log('Wrong sound failed:', e));
+                }
+            }
+
+            // Add event listeners for answer buttons
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('option-btn')) {
+                    const isCorrect = e.target.classList.contains('correct');
+                    playAnswerSound(isCorrect);
+                }
+            });
+
+            // Quiz completion observer
+            const observer = new MutationObserver(() => {
+                if (document.getElementById('completion-screen').classList.contains('active')) {
+                    quizStartSound.pause();
+                    quizStartSound.currentTime = 0;
+                    completionSound.play().catch(e => console.log('Completion sound failed:', e));
+                }
+            });
+
+            observer.observe(document.getElementById('completion-screen'), {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+
+            // Home button
+            document.getElementById('home-btn').addEventListener('click', () => {
+                quizStartSound.pause();
+                quizStartSound.currentTime = 0;
+                completionSound.pause();
+                completionSound.currentTime = 0;
+                window.menuSound.play();
+            });
+
+            // Try Again button
+            document.getElementById('try-again-btn').addEventListener('click', () => {
+                completionSound.pause();
+                completionSound.currentTime = 0;
+                quizStartSound.play().catch(e => console.log('Quiz start sound failed:', e));
+            });
+        });
+    </script>
+
     <div class="quiz-container">
         <div class="grid-lines"></div>
         
@@ -172,4 +279,5 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
