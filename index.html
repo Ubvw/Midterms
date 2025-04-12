@@ -55,72 +55,65 @@
             wrongSound.volume = 0.6;
             completionSound.volume = 0.7;
 
-            // Category selection handling - remove duplicate handler
+            // Category selection handling
             document.querySelectorAll('.category-card').forEach(card => {
                 card.addEventListener('click', () => {
-                    window.menuSound.pause();  // Stop menu music
+                    window.menuSound.pause();
                     window.menuSound.currentTime = 0;
                     quizStartSound.play().catch(e => console.log('Audio play failed:', e));
                 });
             });
 
-            // Start button handling
-            document.getElementById('start-btn').addEventListener('click', () => {
-                // Remove this line as it's causing double audio
-                // menuSound.play();
-            });
-
-                // Category selection handling
-                document.querySelectorAll('.category-card').forEach(card => {
-                    card.addEventListener('click', () => {
-                        menuSound.pause();  // Stop menu music
-                        menuSound.currentTime = 0;
-                        quizStartSound.play().catch(e => console.log('Audio play failed:', e));
-                    });
-                });
-    
-                // Answer feedback sounds
-                function playAnswerSound(isCorrect) {
-                    if (isCorrect) {
-                        correctSound.currentTime = 0;
-                        correctSound.play().catch(e => console.log('Correct sound failed:', e));
-                    } else {
-                        wrongSound.currentTime = 0;
-                        wrongSound.play().catch(e => console.log('Wrong sound failed:', e));
-                    }
+            // Answer feedback sounds
+            function playAnswerSound(isCorrect) {
+                if (isCorrect) {
+                    correctSound.currentTime = 0;
+                    correctSound.play().catch(e => console.log('Correct sound failed:', e));
+                } else {
+                    wrongSound.currentTime = 0;
+                    wrongSound.play().catch(e => console.log('Wrong sound failed:', e));
                 }
-    
-                // Add event listeners to all option buttons
-                document.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('option-btn')) {
-                        const isCorrect = e.target.classList.contains('correct');
-                        playAnswerSound(isCorrect);
-                    }
-                });
-    
-                // Quiz completion
-                const observer = new MutationObserver(() => {
-                    if (document.getElementById('completion-screen').classList.contains('active')) {
-                        quizStartSound.pause();
-                        quizStartSound.currentTime = 0;
-                        completionSound.play().catch(e => console.log('Completion sound failed:', e));
-                        setTimeout(() => {
-                            menuSound.play();  // Resume menu music after completion sound
-                        }, 4000); // Adjust timing based on your completion sound length
-                    }
-                });
+            }
 
-                observer.observe(document.getElementById('completion-screen'), {
-                    attributes: true,
-                    attributeFilter: ['class']
-                });
-    
-                // Home button
-                document.getElementById('home-btn').addEventListener('click', () => {
-                    quizStartSound.pause();
-                });
+            // Add event listeners for answer buttons
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('option-btn')) {
+                    const isCorrect = e.target.classList.contains('correct');
+                    playAnswerSound(isCorrect);
+                }
             });
-        </script>
+
+            // Quiz completion observer
+            const observer = new MutationObserver(() => {
+                if (document.getElementById('completion-screen').classList.contains('active')) {
+                    quizStartSound.pause();
+                    quizStartSound.currentTime = 0;
+                    completionSound.play().catch(e => console.log('Completion sound failed:', e));
+                }
+            });
+
+            observer.observe(document.getElementById('completion-screen'), {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+
+            // Home button
+            document.getElementById('home-btn').addEventListener('click', () => {
+                quizStartSound.pause();
+                quizStartSound.currentTime = 0;
+                completionSound.pause();
+                completionSound.currentTime = 0;
+                window.menuSound.play();
+            });
+
+            // Try Again button
+            document.getElementById('try-again-btn').addEventListener('click', () => {
+                completionSound.pause();
+                completionSound.currentTime = 0;
+                quizStartSound.play().catch(e => console.log('Quiz start sound failed:', e));
+            });
+        });
+    </script>
 
     <div class="quiz-container">
         <div class="grid-lines"></div>
@@ -286,4 +279,5 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
