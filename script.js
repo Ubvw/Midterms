@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let isAnswered = false
   let selectedCategory = ""
   let timerExpired = false
+  let currentPoints = 0 // Add points tracking
 
   // Timer constants
   const TIMER_FULL = 30
@@ -340,6 +341,8 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Starting quiz with category:", selectedCategory)
     currentQuestion = 0
     score = 0
+    currentPoints = 0  // Reset points
+    document.getElementById("current-score").textContent = "0"  // Reset score display
     showQuestionScreen()
     loadQuestion()
   }
@@ -355,9 +358,12 @@ document.addEventListener("DOMContentLoaded", () => {
     isAnswered = false
     timerExpired = false
     timeLeft = TIMER_FULL
+    
+    // Update UI elements
     timerText.textContent = timeLeft
     timerProgress.classList.remove("warning")
     timerProgress.style.strokeDashoffset = "0"
+    document.getElementById("current-score").textContent = currentPoints // Update points display
 
     // Update question number
     currentQuestionNum.textContent = currentQuestion + 1
@@ -418,7 +424,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (selectedIndex === correctIndex) {
       optionBtns[selectedIndex].classList.add("correct")
       score++
-      console.log(`Correct! Score: ${score}`)
+      currentPoints++ // Simply increment by 1 for each correct answer
+      document.getElementById("current-score").textContent = currentPoints
+      console.log(`Correct! Score: ${score}, Points: ${currentPoints}`)
     } else {
       optionBtns[selectedIndex].classList.add("incorrect")
       optionBtns[correctIndex].classList.add("correct")
@@ -433,9 +441,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function endQuiz() {
-    console.log("Quiz ended, score:", score)
+    console.log("Quiz ended, score:", score, "points:", currentPoints)
     showCompletionScreen()
-    finalScore.textContent = score
+    finalScore.textContent = `${score}`
 
     // Customize completion message based on score
     const completionMessage = document.getElementById("completion-message")
@@ -447,4 +455,104 @@ document.addEventListener("DOMContentLoaded", () => {
       completionMessage.textContent = `Keep learning about ${selectedCategory}! You'll do better next time.`
     }
   }
-})
+
+  // Sound toggle functionality
+  const audioControls = document.querySelector('.audio-controls');
+  const muteToggle = document.getElementById('mute-toggle');
+  const volumeControl = document.querySelector('.volume-control');
+  const volumeSlider = document.querySelector('.volume-slider');
+  const soundWaves = document.querySelector('.sound-waves');
+  let isMuted = true; // Start muted
+  let previousVolume = 0.5;
+
+  // Initialize all audio volumes
+  const allSounds = [menuSound, quizStartSound, correctSound, wrongSound, completionSound];
+  allSounds.forEach(sound => {
+      sound.volume = 0; // Start with volume 0
+  });
+
+  // Update initial UI state for muted
+  soundWaves.style.opacity = "0";
+  muteToggle.style.opacity = 0.5;
+  volumeSlider.classList.add('muted');
+  volumeSlider.value = 0;
+
+  // Handle mute/unmute
+  muteToggle.addEventListener('click', () => {
+      isMuted = !isMuted;
+      soundWaves.style.opacity = isMuted ? "0" : "1";
+      
+      if (isMuted) {
+          volumeSlider.classList.add('muted');
+          previousVolume = volumeSlider.value / 100;
+          volumeSlider.value = 0;
+      } else {
+          volumeSlider.classList.remove('muted');
+          volumeSlider.value = previousVolume * 100;
+      }
+      
+      allSounds.forEach(sound => {
+          sound.volume = isMuted ? 0 : previousVolume;
+      });
+      
+      muteToggle.style.opacity = isMuted ? 0.5 : 1;
+  });
+
+  // Handle volume changes
+  volumeSlider.addEventListener('input', (e) => {
+      const volume = e.target.value / 100;
+      previousVolume = volume;
+      
+      // Automatically handle mute state based on volume
+      if (volume === 0) {
+          isMuted = true;
+          soundWaves.style.opacity = "0";
+          muteToggle.style.opacity = 0.5;
+      } else {
+          isMuted = false;
+          soundWaves.style.opacity = "1";
+          muteToggle.style.opacity = 1;
+      }
+      
+      // Update all sound volumes
+      allSounds.forEach(sound => {
+          sound.volume = volume;
+      });
+  });
+
+  // Show volume control on hover
+  muteToggle.addEventListener('mouseenter', () => {
+      volumeControl.classList.add('active');
+  });
+
+  volumeControl.addEventListener('mouseleave', () => {
+      volumeControl.classList.remove('active');
+  });
+
+  // Brightness control functionality
+  const brightnessToggle = document.getElementById('brightness-toggle');
+  const brightnessControl = document.querySelector('.brightness-control');
+  const brightnessSlider = document.querySelector('.brightness-slider');
+  let currentBrightness = 100;
+
+  // Initialize brightness
+  document.body.style.filter = `brightness(${currentBrightness}%)`;
+  brightnessSlider.value = currentBrightness;
+
+  // Handle brightness changes
+  brightnessSlider.addEventListener('input', (e) => {
+      currentBrightness = e.target.value;
+      document.body.style.filter = `brightness(${currentBrightness}%)`;
+      brightnessToggle.style.opacity = currentBrightness / 100;
+  });
+
+  // Show brightness control on hover
+  brightnessToggle.addEventListener('mouseenter', () => {
+      brightnessControl.classList.add('active');
+  });
+
+  brightnessControl.addEventListener('mouseleave', () => {
+      brightnessControl.classList.remove('active');
+  });
+});
+
