@@ -8,25 +8,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <script>
-        // Initialize audio as soon as possible
+        // Initialize audio 
         const menuSound = new Audio('Menu.mp3');
         menuSound.loop = true;
-        menuSound.volume = 0.5;
-        menuSound.autoplay = true;
+        menuSound.volume = 0.7;
         
-        // Try to play automatically
-        menuSound.play().catch(() => {
-            // If autoplay fails, play on first click
-            document.addEventListener('click', () => {
-                menuSound.play();
-            }, { once: true });
-        });
+        // Play menu sound on first user interaction
+        document.addEventListener('click', function playOnFirstClick() {
+            menuSound.play().catch(e => console.log('Menu sound failed:', e));
+            document.removeEventListener('click', playOnFirstClick);
+        }, { once: true });
         
         // Make audio globally accessible
         window.menuSound = menuSound;
     </script>
 </head>
 <body>
+
     <!-- Audio elements -->
     <audio id="quizStartSound" preload="auto">
         <source src="CKK - Daft Punk - Technologic (Karaoke) (mp3cut.net).mp3" type="audio/mp3">
@@ -50,6 +48,10 @@
             
             // Configure sounds
             quizStartSound.loop = true;
+            quizStartSound.volume = 0.7;
+            correctSound.volume = 0.6;
+            wrongSound.volume = 0.6;
+            completionSound.volume = 0.7;
             quizStartSound.volume = 0.7;
             correctSound.volume = 0.6;
             wrongSound.volume = 0.6;
@@ -227,6 +229,10 @@
             <div class="question-header">
                 <div class="category-badge" id="current-category">Science</div>
                 <div class="question-progress">Question <span id="current-question">1</span>/10</div>
+                <div class="score-tracker">
+                    <span class="score-value" id="current-score">0</span>
+                    <span class="score-label"> score </span>
+                </div>
             </div>
             
             <div class="question-wrapper">
@@ -271,6 +277,48 @@
                 <div class="completion-buttons">
                     <button id="try-again-btn" class="btn">Try Again</button>
                     <button id="home-btn" class="btn btn-secondary">Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Setting Controls -->
+    <div class="bottom-controls">
+        <!-- Audio -->
+        <div class="audio-controls">
+            <button id="mute-toggle" class="settings-button">
+                <!-- audio Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path class="sound-waves" d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>   
+                </svg>
+            </button>
+            <div class="volume-control">
+                <div class="volume-slider-container">
+                    <input type="range" class="volume-slider" min="0" max="100" value="50">
+                </div>
+            </div>
+        </div>
+
+        <!-- Brightness -->
+        <div class="brightness-controls">
+            <button id="brightness-toggle" class="brightness-button">
+                 <!-- Brightness Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+            <div class="brightness-control">
+                <div class="brightness-slider-container">
+                    <input type="range" class="brightness-slider" min="30" max="100" value="100">
                 </div>
             </div>
         </div>
